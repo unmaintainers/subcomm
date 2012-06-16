@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.roylaurie</groupId>
+  <artifactId>subcomm</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>subcomm</name>
+  <description>A Java chat client library for A Simple Subspace Server (ASSS).</description>
+  <url>https://github.com/roylaurie/subcomm</url>
+  <licenses>
+  	<license>
+      <name>Modified BSD License, 3-Clause</name>
+      <url>https://github.com/roylaurie/subcomm/blob/master/license.txt</url>
+      <distribution>repo</distribution>
+  	</license>
+  </licenses>
+  <scm>
+  	<connection>scm:git:git@github.com:roylaurie/subcomm.git</connection>
+  	<developerConnection>scm:git:git@github.com:roylaurie/subcomm.git</developerConnection>
+  	<url>https://github.com/roylaurie/subcomm</url>
+  </scm>
+  <developers>
+  	<developer>
+      <id>roylaurie</id>
+      <name>Roy Laurie</name>
+      <email>roy.laurie@gmail.com</email>
+  	</developer>
+  </developers>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <source>1.6</source>
+              <target>1.6</target>
+           </configuration>
+      </plugin>
+	</plugins>
+  </build>
+</project>
