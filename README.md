@@ -18,7 +18,7 @@ An example via code:
 
 ```java
 
-SubcommClient client = new SubcommClient('127.0.0.1', 5005, 'jsmith', 'mypassword');
+SubcommClient client = new SubcommClient("127.0.0.1", 5005, "jsmith", "mypassword");
 client.connect();
 client.joinArena('0');
 client.messagePublic('Hello world!');
