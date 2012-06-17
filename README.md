@@ -3,7 +3,36 @@ subcomm
 
 A chat client library for A Simple Subspace Server (ASSS). Written in Java. BSD license.
 
+This project is available at:
 https://github.com/roylaurie/subcomm
+
+The subchat-ui-web project provides an fully functioning HTML5 implementation of subcomm. It is available at:
+https://github.com/roylaurie/subcomm-ui-web
+
+A live example of the latest stable release of subchat-ui-web is availble at:
+http://www.subcomm.net
+
+usage
+-----
+An example via code:
+
+```java
+
+SubcommClient client = new SubcommClient('127.0.0.1', 5005, 'jsmith', 'mypassword');
+client.connect();
+client.joinArena('0');
+client.messagePublic('Hello world!');
+
+while (client.connected()) {
+    String message = client.nextReceivedMessage();
+    if (message != null) {
+        System.out.println(message);
+    }
+
+    Thread.sleep(350);
+}
+
+```
 
 contributors
 -------
