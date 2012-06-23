@@ -1,13 +1,14 @@
-package com.roylaurie.subcomm;
+package com.roylaurie.subcomm.client.netchat;
 /**
  * All of the standard command prefixes, including the trailing colon.
  * @author Roy Laurie <roy.laurie@gmail.com>
  */
-public enum Command {
+public enum MessageType {
 	LOGIN ("LOGIN:"),
 	GO ("GO:"),
 	NOOP ("NOOP"),
 	LOGINOK ("LOGINOK:"),
+	LOGINBAD ("LOGINBAD:"),
 	CHANGEFREQ ("CHANGEFREQ:"),
 	SEND_CMD ("SEND:CMD:"),
 	SEND_PRIVCMD ("SEND:PRIVCMD:"),
@@ -21,7 +22,7 @@ public enum Command {
 	
 	private final String mCommand;
 	
-	private Command(String command) {
+	private MessageType(String command) {
 		mCommand = command;
 	}
 	

@@ -1,15 +1,16 @@
-package com.roylaurie.subcomm;
+package com.roylaurie.subcomm.client.netchat;
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Runs an blocking old-IO loop for a single TCP socket connection.
  * @author Roy Laurie <roy.laurie@gmail.com>
  */
-public final class Connection implements Runnable {
+public final class NetChatConnection implements Runnable {
 	public static final int SOCKET_TIMEOUT = 10000;
 	private static final char COLON = ':';
 	private static final int MAX_CONSECUTIVE_READS = 10;
@@ -25,7 +26,7 @@ public final class Connection implements Runnable {
 	private PrintWriter mWriter;
 	private BufferedReader mReader;
 	
-	public Connection(String host, int port) {
+	public NetChatConnection(String host, int port) {
 		mHost = host;
 		mPort = port;
 	}
@@ -104,7 +105,7 @@ public final class Connection implements Runnable {
 	
 	private void keepalive() throws IOException {
 		if (System.currentTimeMillis() > mKeepAliveTime) {
-			send(Command.NOOP);
+			send(MessageType.NOOP);
 			mKeepAliveTime = System.currentTimeMillis() + KEEPALIVE_INTERVAL;
 		}
 	}
@@ -145,8 +146,8 @@ public final class Connection implements Runnable {
 		}
 	}
 	
-	public void send(Command command, String ... parameters) throws IOException {
-		StringBuffer buffer = new StringBuffer(command.toString());
+	public void send(MessageType type, String ... parameters) throws IOException {
+		StringBuffer buffer = new StringBuffer(type.toString());
 		for (int i = 0, n = parameters.length; i < n; ++i) {
 		    String str = parameters[i].trim().replaceAll("/[\\r\\n]/", "");
 			buffer.append(str);

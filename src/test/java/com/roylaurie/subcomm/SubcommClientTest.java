@@ -8,6 +8,8 @@ import java.security.SecureRandom;
 
 import org.junit.Test;
 
+import com.roylaurie.subcomm.client.Command;
+import com.roylaurie.subcomm.client.SubcommNetchatClient;
 import com.roylaurie.subcomm.test.TestServer;
 
 /**
@@ -16,10 +18,10 @@ import com.roylaurie.subcomm.test.TestServer;
  */
 public final class SubcommClientTest {
 	private static final class ConnectResult {
-		public final SubcommClient client;
+		public final SubcommNetchatClient client;
 		public final TestServer server;
 		
-		public ConnectResult(SubcommClient client, TestServer server) {
+		public ConnectResult(SubcommNetchatClient client, TestServer server) {
 			this.client = client;
 			this.server = server;
 		}
@@ -65,7 +67,7 @@ public final class SubcommClientTest {
 	@Test
 	public void testSend() throws IOException {
 		ConnectResult result = connect();
-		SubcommClient client = result.client;
+		SubcommNetchatClient client = result.client;
 		TestServer server = result.server;
 		String expected;
 		
@@ -136,7 +138,7 @@ public final class SubcommClientTest {
 	@Test
 	public void testReceive() throws IOException {
 		ConnectResult result = connect();
-		SubcommClient client = result.client;
+		SubcommNetchatClient client = result.client;
 		TestServer server = result.server;
 		
 		try {
@@ -151,7 +153,7 @@ public final class SubcommClientTest {
 		}
 	}
 	
-	private String waitForInput(SubcommClient client) throws IOException {
+	private String waitForInput(SubcommNetchatClient client) throws IOException {
 		long timeoutTime = System.currentTimeMillis() + WAIT_FOR_INPUT_TIMEOUT;
 		String input = client.nextReceivedMessage();
 		while (input == null && System.currentTimeMillis() < timeoutTime) {
@@ -176,7 +178,7 @@ public final class SubcommClientTest {
 			
 			final String username = makeData();
 			final String password = makeData();
-			final SubcommClient client = new SubcommClient(HOST, PORT, username, password);
+			final SubcommNetchatClient client = new SubcommNetchatClient(HOST, PORT, username, password);
 			Thread connectThread = new Thread(new Runnable() {
 				@Override
 				public void run() {
