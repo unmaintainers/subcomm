@@ -8,6 +8,9 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.roylaurie.subcomm.client.SubcommMessage;
+import com.roylaurie.subcomm.client.netchat.SubcommNetchatMessageParser;
+
 /**
  * Performs basic server IO. All methods are blocking.
  * @author Roy Laurie <roy.laurie@gmail.com>
@@ -54,8 +57,8 @@ public final class TestServer {
 	 * @return
 	 * @throws IOException
 	 */
-	public String receiveLine() throws IOException {
-		return mReader.readLine();
+	public SubcommMessage nextMesssageReceived() throws IOException {
+		return SubcommNetchatMessageParser.parse(mReader.readLine());
 	}
 	
 	/**
@@ -63,8 +66,8 @@ public final class TestServer {
 	 * @param message
 	 * @throws IOException
 	 */
-	public void send(String message) throws IOException {
-		mWriter.println(message);
+	public void send(SubcommMessage message) throws IOException {
+		mWriter.println(message.getNetchatMessage());
 	}
 	
 	/**

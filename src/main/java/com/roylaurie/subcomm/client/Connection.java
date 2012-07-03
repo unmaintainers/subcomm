@@ -1,5 +1,5 @@
 package com.roylaurie.subcomm.client;
 
-public class SubcommUdpClient {
+public abstract class Connection {
 
 }

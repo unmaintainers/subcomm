@@ -8,8 +8,20 @@ import java.security.SecureRandom;
 
 import org.junit.Test;
 
-import com.roylaurie.subcomm.client.Command;
-import com.roylaurie.subcomm.client.SubcommNetchatClient;
+import com.roylaurie.subcomm.client.SubcommException;
+import com.roylaurie.subcomm.client.SubcommMessage;
+import com.roylaurie.subcomm.client.exception.SubcommIOException;
+import com.roylaurie.subcomm.client.message.SubcommChangeFrequencyMessage;
+import com.roylaurie.subcomm.client.message.SubcommChannelChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommCommandMessage;
+import com.roylaurie.subcomm.client.message.SubcommFrequencyChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommJoinArenaMessage;
+import com.roylaurie.subcomm.client.message.SubcommModeratorsChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommPrivateChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommPrivateCommandMessage;
+import com.roylaurie.subcomm.client.message.SubcommPublicChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommSquadChatMessage;
+import com.roylaurie.subcomm.client.netchat.SubcommNetchatClient;
 import com.roylaurie.subcomm.test.TestServer;
 
 /**
@@ -35,10 +47,8 @@ public final class SubcommClientTest {
 	private static final long CONNECT_THREAD_TIMEOUT = 10000;
 	private static final String HOST = "127.0.0.1";
 	private static final int PORT = 5555;
-	private static final char COLON = ':';
 	private static final String TEST_CONNECT = "TestConnect";
 	private static final String ONE = "1";
-	private static final char SEMICOLON = ';';
 	private static final int NUM_RECEIVES = 20;
 	private static final long WAIT_FOR_INPUT_TIMEOUT = 5000;
 	private final SecureRandom mRandom = new SecureRandom();
@@ -63,69 +73,70 @@ public final class SubcommClientTest {
 	/**
 	 * Tests sending all of the standard commands.
 	 * @throws IOException
+	 * @throws SubcommException 
 	 */
 	@Test
-	public void testSend() throws IOException {
+	public void testSend() throws IOException, SubcommException {
 		ConnectResult result = connect();
 		SubcommNetchatClient client = result.client;
 		TestServer server = result.server;
-		String expected;
+		SubcommMessage expected;
 		
 		try {
 			String frequency = makeData();
 			client.changeFrequency(frequency);
-			expected = makeCommand(Command.CHANGEFREQ, frequency);
-			assertEquals(expected, server.receiveLine());
+			expected = new SubcommChangeFrequencyMessage(frequency);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			String command = makeData();
 			client.command(command);
-			expected = makeCommand(Command.SEND_CMD, command);
-			assertEquals(expected, server.receiveLine());
+			expected = new SubcommCommandMessage(command);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			String username = makeData();
 			command = makeData();
 			client.commandPrivate(username, command);
-			expected = makeCommand(Command.SEND_PRIVCMD, username, command);
-			assertEquals(expected, server.receiveLine());
+			expected = new SubcommPrivateCommandMessage(username, command);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			String arena = makeData();
 			client.joinArena(arena);
-			expected = makeCommand(Command.GO, arena);
-			assertEquals(expected, server.receiveLine());
+			expected = new SubcommJoinArenaMessage(arena);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			String channel = makeData();
 			String message = makeData();
-			client.messageChat(channel, message);
-			expected = makeCommand(Command.SEND_CHAT, new StringBuffer(channel).append(SEMICOLON).append(message).toString());
-			assertEquals(expected, server.receiveLine());
+			client.chatChannel(channel, message);
+			expected = new SubcommChannelChatMessage(channel, message);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			frequency = makeData();
 			message = makeData();
-			client.messageFrequency(frequency, message);
-			expected = makeCommand(Command.SEND_FREQ, frequency, message);
-			assertEquals(expected, server.receiveLine());
+			client.chatFrequency(frequency, message);
+			expected = new SubcommFrequencyChatMessage(frequency, message);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			message = makeData();
-			client.messageModerators(message);
-			expected = makeCommand(Command.SEND_MOD, message);
-			assertEquals(expected, server.receiveLine());
+			client.chatModerators(message);
+			expected = new SubcommModeratorsChatMessage(message);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			username = makeData();
 			message = makeData();
-			client.messagePrivate(username, message);
-			expected = makeCommand(Command.SEND_PRIV, username, message);
-			assertEquals(expected, server.receiveLine());
+			client.chatPrivate(username, message);
+			expected = new SubcommPrivateChatMessage(username, message);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			message = makeData();
-			client.messagePublic(message);
-			expected = makeCommand(Command.SEND_PUB, message);
-			assertEquals(expected, server.receiveLine());
+			client.chatPublic(message);
+			expected = new SubcommPublicChatMessage(message);
+			assertEquals(expected, server.nextMesssageReceived());
 			
 			String squad = makeData();
 			message = makeData();
-			client.messageSquad(squad, message);
-			expected = makeCommand(Command.SEND_SQUAD, squad, message);
-			assertEquals(expected, server.receiveLine());
+			client.chatSquad(squad, message);
+			expected = new SubcommSquadChatMessage(squad, message);
+			assertEquals(expected, server.nextMesssageReceived());
 		} finally {
 			result.close();
 		}
@@ -134,16 +145,19 @@ public final class SubcommClientTest {
 	/**
 	 * Tests receiving commands.
 	 * @throws IOException
+	 * @throws SubcommIOException 
 	 */
 	@Test
-	public void testReceive() throws IOException {
+	public void testReceive() throws IOException, SubcommIOException {
 		ConnectResult result = connect();
 		SubcommNetchatClient client = result.client;
 		TestServer server = result.server;
 		
 		try {
 			for (int i = 0; i < NUM_RECEIVES; ++i) {
-				String expected = makeData();
+	            String username = makeData();
+	            String message = makeData();
+			    SubcommMessage expected = new SubcommPrivateChatMessage(username, message);
 				server.send(expected);
 				assertEquals(expected, waitForInput(client));
 			}
@@ -153,17 +167,17 @@ public final class SubcommClientTest {
 		}
 	}
 	
-	private String waitForInput(SubcommNetchatClient client) throws IOException {
+	private SubcommMessage waitForInput(SubcommNetchatClient client) throws SubcommIOException {
 		long timeoutTime = System.currentTimeMillis() + WAIT_FOR_INPUT_TIMEOUT;
-		String input = client.nextReceivedMessage();
-		while (input == null && System.currentTimeMillis() < timeoutTime) {
-			input = client.nextReceivedMessage();
+		SubcommMessage message = client.nextReceivedMessage();
+		while (message == null && System.currentTimeMillis() < timeoutTime) {
+			message = client.nextReceivedMessage();
 		}
 		
-		if (input == null)
-			throw new IOException("No IO received");
+		if (message == null)
+			throw new SubcommIOException("No IO received");
 		
-		return input;
+		return message;
 	}
 	
 	/**
@@ -197,9 +211,9 @@ public final class SubcommClientTest {
 			connectThread.setName(TEST_CONNECT);
 			connectThread.start();
 			server.accept();
-			String expected = makeCommand(Command.LOGIN, ONE, username, password);
-			assertEquals(expected, server.receiveLine());
-			server.send(makeCommand(Command.LOGINOK));
+			String expected = new SubcommLoginMessage(ONE, username, password);
+			assertEquals(expected, server.nextMesssageReceived());
+			server.send(new SubcommLoginOkMessage());
 			
 			try {
 				synchronized(connectThread) {
@@ -223,22 +237,5 @@ public final class SubcommClientTest {
 	 */
 	private String makeData() {
 		return new BigInteger(130, mRandom).toString(32);
-	}
-	
-	/**
-	 * Makes a command by joining each parameter together with a colon.
-	 * @param String command
-	 * @param String parameters
-	 * @return String The joined result
-	 */
-	public String makeCommand(Command command, String ... parameters) {
-		StringBuffer buffer = new StringBuffer(command.toString());
-		for (int i = 0, n = parameters.length; i < n; ++i) {
-			buffer.append(parameters[i]);
-			if ((i+1) < n)
-				buffer.append(COLON);
-		}
-		
-		return buffer.toString();
 	}
 }

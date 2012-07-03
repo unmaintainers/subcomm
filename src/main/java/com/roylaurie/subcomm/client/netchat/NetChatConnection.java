@@ -5,12 +5,15 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.roylaurie.subcomm.client.Connection;
+import com.roylaurie.subcomm.client.SubcommMessageType;
+
 
 /**
  * Runs an blocking old-IO loop for a single TCP socket connection.
  * @author Roy Laurie <roy.laurie@gmail.com>
  */
-public final class NetChatConnection implements Runnable {
+public final class NetChatConnection extends Connection implements Runnable {
 	public static final int SOCKET_TIMEOUT = 10000;
 	private static final char COLON = ':';
 	private static final int MAX_CONSECUTIVE_READS = 10;
@@ -105,7 +108,7 @@ public final class NetChatConnection implements Runnable {
 	
 	private void keepalive() throws IOException {
 		if (System.currentTimeMillis() > mKeepAliveTime) {
-			send(MessageType.NOOP);
+			send(SubcommMessageType.NOOP);
 			mKeepAliveTime = System.currentTimeMillis() + KEEPALIVE_INTERVAL;
 		}
 	}
@@ -146,8 +149,8 @@ public final class NetChatConnection implements Runnable {
 		}
 	}
 	
-	public void send(MessageType type, String ... parameters) throws IOException {
-		StringBuffer buffer = new StringBuffer(type.toString());
+	public void send(SubcommMessageType type, String ... parameters) throws IOException {
+		StringBuffer buffer = new StringBuffer(type.getNetchatPrefix());
 		for (int i = 0, n = parameters.length; i < n; ++i) {
 		    String str = parameters[i].trim().replaceAll("/[\\r\\n]/", "");
 			buffer.append(str);

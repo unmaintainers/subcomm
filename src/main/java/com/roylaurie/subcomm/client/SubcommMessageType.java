@@ -20,10 +20,15 @@ public enum SubcommMessageType {
 	SEND_SQUAD ("SEND:SQUAD:")
 	;
 	
-	private final String mCommand;
+	private final String mNetchatPrefix;
 	
 	private SubcommMessageType(String command) {
-		mCommand = command;
+		mNetchatPrefix = command;
+	}
+	
+	
+	public final String getNetchatPrefix() {
+	    return mNetchatPrefix;
 	}
 	
 	/**
@@ -31,6 +36,6 @@ public enum SubcommMessageType {
 	 */
 	@Override
 	public String toString() {
-		return mCommand;
+		return mNetchatPrefix;
 	}
 }
