@@ -8,18 +8,18 @@ public abstract class SubcommMessage {
     private static final Pattern NETCHAT_TRIM_PATTERN = Pattern.compile("/[\\r\\n]/");
     private static final String EMPTY_STR = "";
     
-    private final SubcommMessageType mType;   
+    private final String mNetchatPrefix;   
     
-    protected SubcommMessage(SubcommMessageType type) {
-        mType = type;
+    protected SubcommMessage(String netchatPrefix) {
+        mNetchatPrefix = netchatPrefix;
     }
     
-    public final SubcommMessageType getType() {
-        return mType;
+    public final String getNetchatPrefix() {
+        return mNetchatPrefix;
     }
     
     protected final String createNetchatMessage(String ... parameters) {
-        StringBuffer buffer = new StringBuffer(getType().getNetchatPrefix());
+        StringBuffer buffer = new StringBuffer(mNetchatPrefix);
         for (int i = 0, n = parameters.length; i < n; ++i) {
             String str = NETCHAT_TRIM_PATTERN.matcher(parameters[i].trim()).replaceAll(EMPTY_STR);
             buffer.append(str);

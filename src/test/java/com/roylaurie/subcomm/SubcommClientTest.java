@@ -16,6 +16,8 @@ import com.roylaurie.subcomm.client.message.SubcommChannelChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommCommandMessage;
 import com.roylaurie.subcomm.client.message.SubcommFrequencyChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommJoinArenaMessage;
+import com.roylaurie.subcomm.client.message.SubcommLoginMessage;
+import com.roylaurie.subcomm.client.message.SubcommLoginOkMessage;
 import com.roylaurie.subcomm.client.message.SubcommModeratorsChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommPrivateChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommPrivateCommandMessage;
@@ -48,7 +50,6 @@ public final class SubcommClientTest {
 	private static final String HOST = "127.0.0.1";
 	private static final int PORT = 5555;
 	private static final String TEST_CONNECT = "TestConnect";
-	private static final String ONE = "1";
 	private static final int NUM_RECEIVES = 20;
 	private static final long WAIT_FOR_INPUT_TIMEOUT = 5000;
 	private final SecureRandom mRandom = new SecureRandom();
@@ -211,7 +212,7 @@ public final class SubcommClientTest {
 			connectThread.setName(TEST_CONNECT);
 			connectThread.start();
 			server.accept();
-			String expected = new SubcommLoginMessage(ONE, username, password);
+			SubcommMessage expected = new SubcommLoginMessage(username, password);
 			assertEquals(expected, server.nextMesssageReceived());
 			server.send(new SubcommLoginOkMessage());
 			

@@ -5,16 +5,17 @@ import java.util.regex.Pattern;
 
 import com.roylaurie.subcomm.client.SubcommMessage;
 
-public final class SubcommFrequencyChatMessage extends SubcommMessage {
-	private static final String NETCHAT_PREFIX = "SEND:FREQ";
-	private static final Pattern NETCHAT_PATTERN = Pattern.compile(
-		"^" + NETCHAT_PREFIX + ":(.*?):(.*)$"
+public final class SubcommLoginMessage extends SubcommMessage {
+	private static final String NETCHAT_PREFIX = "LOGIN";
+	private static final String VERSION_ONE = "1";
+    private static final Pattern NETCHAT_PATTERN = Pattern.compile(
+        "^" + NETCHAT_PREFIX + ":(.*)$"
     );
-	
-    private final String mFrequency;
-    private final String mMessage;
     
-	public static SubcommMessage parseNetChatMessage(String netchatMessage) {
+    private final String mUsername;
+    private final String mPassword;
+    
+    public static SubcommMessage parseNetChatMessage(String netchatMessage) {
 		Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
             throw new IllegalArgumentException("Unknown message format.");
@@ -28,24 +29,24 @@ public final class SubcommFrequencyChatMessage extends SubcommMessage {
             throw new IllegalArgumentException("Message not specified.");
         
         return new SubcommChannelChatMessage(frequency, message);
-	}    
+	}       
     
-    public SubcommFrequencyChatMessage(String frequency, String message) {
+    public SubcommLoginMessage(String username, String password) {
         super(NETCHAT_PREFIX);
-        mFrequency = frequency;
-        mMessage = message;
+        mUsername = username;
+        mPassword = password;
     }
 
-    public String getFrequency() {
-        return mFrequency;
-    }    
+    public String getUsername() {
+        return mUsername;
+    }
     
-    public String getMessage() {
-        return mMessage;
+    public String getPassword() {
+    	return mPassword;
     }
 
     @Override
     public String getNetchatMessage() {
-       return createNetchatMessage(mFrequency, mMessage);
+       return createNetchatMessage(VERSION_ONE, mUsername, mPassword);
     }
 }
