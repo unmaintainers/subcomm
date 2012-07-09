@@ -6,10 +6,13 @@ A chat client library for A Simple Subspace Server (ASSS). Written in Java. BSD 
 This project is available at:
 https://github.com/roylaurie/subcomm
 
-The subchat-ui-web project provides an fully functioning HTML5 implementation of subcomm. It is available at:
-https://github.com/roylaurie/subcomm-ui-web
+The SubComm Web project provides a fully functioning HTML5 GUI using SubComm. It is available at:
+https://github.com/roylaurie/subcomm-web
 
-A live example of the latest stable release of subchat-ui-web is availble at:
+The project for the SubComm client applet is available at:
+https://github.com/roylaurie/subcomm-web-client-applet
+
+A live example of the latest stable release of the SubComm Web project is always available at:
 http://www.subcomm.net
 
 usage
@@ -70,7 +73,7 @@ in it's main-line:
 Requirements:
 * Follow the style standard that is apparent throughout the code-base.
 * New code should come with new unit-tests or unit-test fixes.
-* Read the project README fully and agree to donate your code under the subcomm (3bsd) license.
+* Read the project README fully and agree to donate your code under the SubComm (3bsd) license.
 
 Also, you are more than welcome to start your own project from existing code and do whatever
 you like with it - it's free software.
