@@ -24,7 +24,7 @@ An example via code:
 SubcommClient client = new SubcommClient("127.0.0.1", 5005, "jsmith", "mypassword");
 client.connect();
 client.joinArena("0");
-client.messagePublic("Hello world!");
+client.chatPublic("Hello world!");
 
 while (client.connected()) {
     String message = client.nextReceivedMessage();
