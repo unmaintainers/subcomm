@@ -41,8 +41,6 @@ contributors
 -------
 * Roy Laurie, Roy Laurie Software <roy.laurie@gmail.com>
 
-Inspired by the 'chatnut' project.
-
 shameless plug
 --------------
 Roy Laurie Software is an ongoing experiment in open-source and copy-free software
