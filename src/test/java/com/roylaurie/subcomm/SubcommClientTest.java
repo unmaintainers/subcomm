@@ -83,29 +83,34 @@ public final class SubcommClientTest {
 		SubcommMessage expected;
 		
         // sorted by classname
-		try {		    
+		try {
+		    // change frequency
 			String frequency = DataGenerator.generate();
 			client.changeFrequency(frequency);
 			expected = new SubcommChangeFrequencyMessage(frequency);
 			assertEquals(expected, server.nextMesssageReceived());
 			
+			// channel chat
             String channel = DataGenerator.generate();
             String message = DataGenerator.generate();
             client.chatChannel(channel, message);
             expected = new SubcommChannelChatMessage(channel, message);
             assertEquals(expected, server.nextMesssageReceived());			
 			
+            // command
 			String command = DataGenerator.generate();
 			client.command(command);
 			expected = new SubcommCommandMessage(command);
 			assertEquals(expected, server.nextMesssageReceived());
 			
+			// frequency chat
 			frequency = DataGenerator.generate();
             message = DataGenerator.generate();
             client.chatFrequency(frequency, message);
             expected = new SubcommFrequencyChatMessage(frequency, message);
             assertEquals(expected, server.nextMesssageReceived());
 			
+            // join arena
 			String arena = DataGenerator.generate();
 			client.joinArena(arena);
 			expected = new SubcommJoinArenaMessage(arena);
@@ -121,6 +126,7 @@ public final class SubcommClientTest {
             expected = new SubcommLoginOkMessage();
             assertEquals(expected, SubcommNetchatMessageParser.parse(expected.getNetchatMessage()));
             
+            // moderators chat
 			message = DataGenerator.generate();
 			client.chatModerators(message);
 			expected = new SubcommModeratorsChatMessage(message);
@@ -130,23 +136,27 @@ public final class SubcommClientTest {
             expected = new SubcommNoOpMessage();
             assertEquals(expected, SubcommNetchatMessageParser.parse(expected.getNetchatMessage()));			
 			
+            // private chat
 			username = DataGenerator.generate();
 			message = DataGenerator.generate();
 			client.chatPrivate(username, message);
 			expected = new SubcommPrivateChatMessage(username, message);
 			assertEquals(expected, server.nextMesssageReceived());
 			
+			// public chat
             message = DataGenerator.generate();
             client.chatPublic(message);
             expected = new SubcommPublicChatMessage(message);
             assertEquals(expected, server.nextMesssageReceived());			
 			
+            // private command
 			username = DataGenerator.generate();
             command = DataGenerator.generate();
             client.commandPrivate(username, command);
             expected = new SubcommPrivateCommandMessage(username, command);
             assertEquals(expected, server.nextMesssageReceived());
 			
+            // squad chat
 			String squad = DataGenerator.generate();
 			message = DataGenerator.generate();
 			client.chatSquad(squad, message);
