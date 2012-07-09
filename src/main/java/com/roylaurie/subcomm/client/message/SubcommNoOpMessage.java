@@ -5,10 +5,10 @@ import java.util.regex.Pattern;
 
 import com.roylaurie.subcomm.client.SubcommMessage;
 
-public final class SubcommLoginOkMessage extends SubcommMessage {
-	private static final String NETCHAT_PREFIX = "LOGINOK";
+public final class SubcommNoOpMessage extends SubcommMessage {
+	private static final String NETCHAT_PREFIX = "NOOP";
     private static final Pattern NETCHAT_PATTERN = Pattern.compile(
-        "^" + NETCHAT_PREFIX + ":$"
+        "^" + NETCHAT_PREFIX + "$"
     );
     
    /**
@@ -17,19 +17,19 @@ public final class SubcommLoginOkMessage extends SubcommMessage {
     * @return SubcommLoginOkMessage NULL if the expected pattern doesn't match.
     * @throws IllegalArgumentException If the parameter values are unsupported
     */
-    public static SubcommLoginOkMessage parseNetchatMessage(String netchatMessage) {
+    public static SubcommNoOpMessage parseNetchatMessage(String netchatMessage) {
         Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
             return null;
-        return new SubcommLoginOkMessage();
+        return new SubcommNoOpMessage();
     }  	
 	
-    public SubcommLoginOkMessage() {
+    public SubcommNoOpMessage() {
         super(NETCHAT_PREFIX);
     }
 
     @Override
     public String getNetchatMessage() {
-       return createNetchatMessage();
+       return NETCHAT_PREFIX;
     }
 }

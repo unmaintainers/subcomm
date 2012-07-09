@@ -3,9 +3,6 @@ package com.roylaurie.subcomm;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
 import org.junit.Test;
 
 import com.roylaurie.subcomm.client.SubcommException;
@@ -19,11 +16,14 @@ import com.roylaurie.subcomm.client.message.SubcommJoinArenaMessage;
 import com.roylaurie.subcomm.client.message.SubcommLoginMessage;
 import com.roylaurie.subcomm.client.message.SubcommLoginOkMessage;
 import com.roylaurie.subcomm.client.message.SubcommModeratorsChatMessage;
+import com.roylaurie.subcomm.client.message.SubcommNoOpMessage;
 import com.roylaurie.subcomm.client.message.SubcommPrivateChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommPrivateCommandMessage;
 import com.roylaurie.subcomm.client.message.SubcommPublicChatMessage;
 import com.roylaurie.subcomm.client.message.SubcommSquadChatMessage;
 import com.roylaurie.subcomm.client.netchat.SubcommNetchatClient;
+import com.roylaurie.subcomm.client.netchat.SubcommNetchatMessageParser;
+import com.roylaurie.subcomm.test.DataGenerator;
 import com.roylaurie.subcomm.test.TestServer;
 
 /**
@@ -52,7 +52,6 @@ public final class SubcommClientTest {
 	private static final String TEST_CONNECT = "TestConnect";
 	private static final int NUM_RECEIVES = 20;
 	private static final long WAIT_FOR_INPUT_TIMEOUT = 5000;
-	private final SecureRandom mRandom = new SecureRandom();
 	
 	/**
 	 * Tests connect setup and teardown as well as health reporting.
@@ -83,58 +82,73 @@ public final class SubcommClientTest {
 		TestServer server = result.server;
 		SubcommMessage expected;
 		
-		try {
-			String frequency = makeData();
+        // sorted by classname
+		try {		    
+			String frequency = DataGenerator.generate();
 			client.changeFrequency(frequency);
 			expected = new SubcommChangeFrequencyMessage(frequency);
 			assertEquals(expected, server.nextMesssageReceived());
 			
-			String command = makeData();
+            String channel = DataGenerator.generate();
+            String message = DataGenerator.generate();
+            client.chatChannel(channel, message);
+            expected = new SubcommChannelChatMessage(channel, message);
+            assertEquals(expected, server.nextMesssageReceived());			
+			
+			String command = DataGenerator.generate();
 			client.command(command);
 			expected = new SubcommCommandMessage(command);
 			assertEquals(expected, server.nextMesssageReceived());
 			
-			String username = makeData();
-			command = makeData();
-			client.commandPrivate(username, command);
-			expected = new SubcommPrivateCommandMessage(username, command);
-			assertEquals(expected, server.nextMesssageReceived());
+			frequency = DataGenerator.generate();
+            message = DataGenerator.generate();
+            client.chatFrequency(frequency, message);
+            expected = new SubcommFrequencyChatMessage(frequency, message);
+            assertEquals(expected, server.nextMesssageReceived());
 			
-			String arena = makeData();
+			String arena = DataGenerator.generate();
 			client.joinArena(arena);
 			expected = new SubcommJoinArenaMessage(arena);
 			assertEquals(expected, server.nextMesssageReceived());
+
+			// login - test indirectly
+			String username = DataGenerator.generate();
+			String password = DataGenerator.generate();
+            expected = new SubcommLoginMessage(username, password);
+            assertEquals(expected, SubcommNetchatMessageParser.parse(expected.getNetchatMessage()));
 			
-			String channel = makeData();
-			String message = makeData();
-			client.chatChannel(channel, message);
-			expected = new SubcommChannelChatMessage(channel, message);
-			assertEquals(expected, server.nextMesssageReceived());
-			
-			frequency = makeData();
-			message = makeData();
-			client.chatFrequency(frequency, message);
-			expected = new SubcommFrequencyChatMessage(frequency, message);
-			assertEquals(expected, server.nextMesssageReceived());
-			
-			message = makeData();
+            // login ok - test indirectly
+            expected = new SubcommLoginOkMessage();
+            assertEquals(expected, SubcommNetchatMessageParser.parse(expected.getNetchatMessage()));
+            
+			message = DataGenerator.generate();
 			client.chatModerators(message);
 			expected = new SubcommModeratorsChatMessage(message);
 			assertEquals(expected, server.nextMesssageReceived());
 			
-			username = makeData();
-			message = makeData();
+            // no op - test indirectly
+            expected = new SubcommNoOpMessage();
+            assertEquals(expected, SubcommNetchatMessageParser.parse(expected.getNetchatMessage()));			
+			
+			username = DataGenerator.generate();
+			message = DataGenerator.generate();
 			client.chatPrivate(username, message);
 			expected = new SubcommPrivateChatMessage(username, message);
 			assertEquals(expected, server.nextMesssageReceived());
 			
-			message = makeData();
-			client.chatPublic(message);
-			expected = new SubcommPublicChatMessage(message);
-			assertEquals(expected, server.nextMesssageReceived());
+            message = DataGenerator.generate();
+            client.chatPublic(message);
+            expected = new SubcommPublicChatMessage(message);
+            assertEquals(expected, server.nextMesssageReceived());			
 			
-			String squad = makeData();
-			message = makeData();
+			username = DataGenerator.generate();
+            command = DataGenerator.generate();
+            client.commandPrivate(username, command);
+            expected = new SubcommPrivateCommandMessage(username, command);
+            assertEquals(expected, server.nextMesssageReceived());
+			
+			String squad = DataGenerator.generate();
+			message = DataGenerator.generate();
 			client.chatSquad(squad, message);
 			expected = new SubcommSquadChatMessage(squad, message);
 			assertEquals(expected, server.nextMesssageReceived());
@@ -156,8 +170,8 @@ public final class SubcommClientTest {
 		
 		try {
 			for (int i = 0; i < NUM_RECEIVES; ++i) {
-	            String username = makeData();
-	            String message = makeData();
+	            String username = DataGenerator.generate();
+	            String message = DataGenerator.generate();
 			    SubcommMessage expected = new SubcommPrivateChatMessage(username, message);
 				server.send(expected);
 				assertEquals(expected, waitForInput(client));
@@ -191,8 +205,8 @@ public final class SubcommClientTest {
 		try {
 			server.bind();
 			
-			final String username = makeData();
-			final String password = makeData();
+			final String username = DataGenerator.generate();
+			final String password = DataGenerator.generate();
 			final SubcommNetchatClient client = new SubcommNetchatClient(HOST, PORT, username, password);
 			Thread connectThread = new Thread(new Runnable() {
 				@Override
@@ -230,13 +244,5 @@ public final class SubcommClientTest {
 			server.close();
 			throw e;
 		}
-	}
-	
-	/**
-	 * Makes random 32-character dummy data.
-	 * @return String
-	 */
-	private String makeData() {
-		return new BigInteger(130, mRandom).toString(32);
 	}
 }

@@ -14,10 +14,16 @@ public final class SubcommFrequencyChatMessage extends SubcommMessage {
     private final String mFrequency;
     private final String mMessage;
     
-	public static SubcommMessage parseNetChatMessage(String netchatMessage) {
+    /**
+     * Creates a message object from a single raw netchat message.
+     * @param String netchatMessage
+     * @return SubcommFrequencyChatMessage NULL if the expected pattern doesn't match.
+     * @throws IllegalArgumentException If the parameter values are unsupported
+     */
+	public static SubcommFrequencyChatMessage parseNetchatMessage(String netchatMessage) {
 		Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
-            throw new IllegalArgumentException("Unknown message format.");
+            return null;
         
         String frequency = matcher.group(1);
         if (frequency == null || frequency.length() == 0)
@@ -27,7 +33,7 @@ public final class SubcommFrequencyChatMessage extends SubcommMessage {
         if (message == null || message.length() == 0)
             throw new IllegalArgumentException("Message not specified.");
         
-        return new SubcommChannelChatMessage(frequency, message);
+        return new SubcommFrequencyChatMessage(frequency, message);
 	}    
     
     public SubcommFrequencyChatMessage(String frequency, String message) {

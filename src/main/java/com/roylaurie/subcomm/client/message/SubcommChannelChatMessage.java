@@ -9,16 +9,22 @@ public final class SubcommChannelChatMessage extends SubcommMessage {
 	private static final String NETCHAT_PREFIX = "SEND:CHAT";
     private static final char SEMICOLON = ';';
     private static final Pattern NETCHAT_PATTERN = Pattern.compile(
-        "^" + NETCHAT_PREFIX + ":(.*?):(.*)$"
+        "^" + NETCHAT_PREFIX + ":(.*?);(.*)$"
     );
     
     private final String mChannel;
     private final String mMessage;
     
-    public static SubcommChannelChatMessage parseNetChatMessage(String netchatMessage) {
+    /**
+     * Creates a message object from a single raw netchat message.
+     * @param String netchatMessage
+     * @return SubcommChannelChatMessage NULL if the expected pattern doesn't match.
+     * @throws IllegalArgumentException If the parameter values are unsupported
+     */
+    public static SubcommChannelChatMessage parseNetchatMessage(String netchatMessage) {
         Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
-            throw new IllegalArgumentException("Unknown message format.");
+            return null;
         
         String channel = matcher.group(1);
         if (channel == null || channel.length() == 0)

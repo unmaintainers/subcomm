@@ -19,7 +19,7 @@ public abstract class SubcommMessage {
     }
     
     protected final String createNetchatMessage(String ... parameters) {
-        StringBuffer buffer = new StringBuffer(mNetchatPrefix);
+        StringBuffer buffer = new StringBuffer(mNetchatPrefix).append(COLON);
         for (int i = 0, n = parameters.length; i < n; ++i) {
             String str = NETCHAT_TRIM_PATTERN.matcher(parameters[i].trim()).replaceAll(EMPTY_STR);
             buffer.append(str);
@@ -29,6 +29,24 @@ public abstract class SubcommMessage {
         
         return buffer.toString();
     }    
+    
+    @Override
+    public final String toString() {
+        return getNetchatMessage();
+    }
+    
+    @Override
+    public final int hashCode() {
+        return getNetchatMessage().hashCode();
+    }
+    
+    @Override
+    public final boolean equals(Object ro) {
+        if (ro == null || !getClass().equals(ro.getClass()))
+            return false;
+        
+        return getNetchatMessage().equals(((SubcommMessage)ro).getNetchatMessage());
+    }
     
     public ByteBuffer getUdpPacket() {
         throw new UnsupportedOperationException();

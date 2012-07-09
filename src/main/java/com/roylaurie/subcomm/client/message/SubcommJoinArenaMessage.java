@@ -11,19 +11,25 @@ public final class SubcommJoinArenaMessage extends SubcommMessage {
         "^" + NETCHAT_PREFIX + ":(.*)$"
     );  
 	
-	public static SubcommCommandMessage parseNetChatMessage(String netchatMessage) {
+    private final String mArena;
+    
+    /**
+     * Creates a message object from a single raw netchat message.
+     * @param String netchatMessage
+     * @return SubcommJoinArenaMessage NULL if the expected pattern doesn't match.
+     * @throws IllegalArgumentException If the parameter values are unsupported
+     */
+    public static SubcommJoinArenaMessage parseNetchatMessage(String netchatMessage) {
         Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
-            throw new IllegalArgumentException("Unknown message format.");
+            return null;
         
         String arena = matcher.group(1);
         if (arena == null || arena.length() == 0)
             throw new IllegalArgumentException("Message not specified.");
         
-        return new SubcommCommandMessage(arena);
-    }
-	
-    private final String mArena;
+        return new SubcommJoinArenaMessage(arena);
+    }    
     
     public SubcommJoinArenaMessage(String arena) {
         super(NETCHAT_PREFIX);

@@ -6,16 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.roylaurie.subcomm.client.Connection;
-import com.roylaurie.subcomm.client.SubcommMessageType;
+import com.roylaurie.subcomm.client.message.SubcommNoOpMessage;
 
 
 /**
  * Runs an blocking old-IO loop for a single TCP socket connection.
  * @author Roy Laurie <roy.laurie@gmail.com>
  */
-public final class NetChatConnection extends Connection implements Runnable {
+public final class NetchatConnection extends Connection implements Runnable {
 	public static final int SOCKET_TIMEOUT = 10000;
-	private static final char COLON = ':';
 	private static final int MAX_CONSECUTIVE_READS = 10;
 	private static final int MAX_CONSECUTIVE_WRITES = 10;
 	private static final int KEEPALIVE_INTERVAL = 180000;
@@ -29,7 +28,7 @@ public final class NetChatConnection extends Connection implements Runnable {
 	private PrintWriter mWriter;
 	private BufferedReader mReader;
 	
-	public NetChatConnection(String host, int port) {
+	public NetchatConnection(String host, int port) {
 		mHost = host;
 		mPort = port;
 	}
@@ -108,7 +107,7 @@ public final class NetChatConnection extends Connection implements Runnable {
 	
 	private void keepalive() throws IOException {
 		if (System.currentTimeMillis() > mKeepAliveTime) {
-			send(SubcommMessageType.NOOP);
+			send(new SubcommNoOpMessage().getNetchatMessage());
 			mKeepAliveTime = System.currentTimeMillis() + KEEPALIVE_INTERVAL;
 		}
 	}
@@ -147,17 +146,5 @@ public final class NetChatConnection extends Connection implements Runnable {
 		synchronized(mOutputList) {
 			mOutputList.add(message);
 		}
-	}
-	
-	public void send(SubcommMessageType type, String ... parameters) throws IOException {
-		StringBuffer buffer = new StringBuffer(type.getNetchatPrefix());
-		for (int i = 0, n = parameters.length; i < n; ++i) {
-		    String str = parameters[i].trim().replaceAll("/[\\r\\n]/", "");
-			buffer.append(str);
-			if ((i+1) < n)
-				buffer.append(COLON);
-		}
-		
-		send(buffer.toString());
 	}
 }

@@ -13,10 +13,16 @@ public final class SubcommCommandMessage extends SubcommMessage {
     
     private final String mCommand;
     
-    public static SubcommCommandMessage parseNetChatMessage(String netchatMessage) {
+    /**
+     * Creates a message object from a single raw netchat message.
+     * @param String netchatMessage
+     * @return SubcommCommandMessage NULL if the expected pattern doesn't match.
+     * @throws IllegalArgumentException If the parameter values are unsupported
+     */
+    public static SubcommCommandMessage parseNetchatMessage(String netchatMessage) {
         Matcher matcher = NETCHAT_PATTERN.matcher(netchatMessage);
         if (!matcher.find())
-            throw new IllegalArgumentException("Unknown message format.");
+            return null;
         
         String command = matcher.group(1);
         if (command == null || command.length() == 0)

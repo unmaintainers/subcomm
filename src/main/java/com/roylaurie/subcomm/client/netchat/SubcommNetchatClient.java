@@ -12,19 +12,19 @@ import com.roylaurie.subcomm.client.exception.SubcommIOException;
 import com.roylaurie.subcomm.client.exception.SubcommLoginException;
 import com.roylaurie.subcomm.client.exception.SubcommLoginTimeoutException;
 import com.roylaurie.subcomm.client.exception.SubcommTimeoutException;
+import com.roylaurie.subcomm.client.message.SubcommLoginMessage;
 
 /**
  * Connects to (blocking) a SubSpace server and allows sending / receiving of messages (non-blocking).
  * @author Roy Laurie <roy.laurie@gmail.com>
  */
 public final class SubcommNetchatClient extends SubcommClient {
-	private static final String PROTOCOL_TYPE = "1";
 	private static final int LOGIN_SLEEP = 350;
 	private static final char COLON = ':';
 	private static final char SPACE = ' ';
 	private static final String SUBCOMM_CLIENT = "SubcommClient";
 	
-	private NetChatConnection mConnection;
+	private NetchatConnection mConnection;
 
 
     /**
@@ -48,7 +48,7 @@ public final class SubcommNetchatClient extends SubcommClient {
 		if (connected())
 			return;
 
-		mConnection = new NetChatConnection(getHost(), getPort());
+		mConnection = new NetchatConnection(getHost(), getPort());
 		try {
             mConnection.connect();
         } catch (UnknownHostException e) {
@@ -136,13 +136,8 @@ public final class SubcommNetchatClient extends SubcommClient {
 	 */
 	private void login(String username, String password)
 	                throws SubcommIOException, SubcommLoginException, SubcommTimeoutException {
-		try {
-            mConnection.send(SubcommMessageType.LOGIN, PROTOCOL_TYPE, username, password);
-        } catch (IOException e) {
-           throw new SubcommIOException(e);
-        }
+        send(new SubcommLoginMessage(username, password));
 		long timeoutTime = System.currentTimeMillis() + 30000; // 30seconds
-		
 		String input;
         try {
             input = mConnection.nextReceivedMessage();
