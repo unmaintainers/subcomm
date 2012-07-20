@@ -15,7 +15,7 @@ import com.roylaurie.subcomm.client.message.SubcommSquadChatMessage;
 
 
 public abstract class SubcommClient {
-    private static final String ZERO = null;
+    private static final String ZERO = "0";
     private final String mHost;
     private final int mPort;
     private final String mUsername;
