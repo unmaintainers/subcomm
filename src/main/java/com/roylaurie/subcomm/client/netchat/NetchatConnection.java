@@ -35,7 +35,6 @@ public final class NetchatConnection extends Connection implements Runnable {
 	
 	public void connect() throws UnknownHostException, IOException {
 		mSocket = new Socket(mHost, mPort);
-		mSocket.setKeepAlive(true);
 		mSocket.setSoTimeout(SOCKET_TIMEOUT);
 		mWriter = new PrintWriter(mSocket.getOutputStream(), true);
 		mReader = new BufferedReader( new InputStreamReader(mSocket.getInputStream()));
