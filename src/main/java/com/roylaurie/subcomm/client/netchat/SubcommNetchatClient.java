@@ -178,4 +178,13 @@ public final class SubcommNetchatClient extends SubcommClient {
            throw new SubcommIOException(e);
        }
     }
+    
+    @Override
+    public void send(String message) throws SubcommIOException {
+       try {
+           mConnection.send(message);
+       } catch (IOException e) {
+           throw new SubcommIOException(e);
+       }
+    }
 }

@@ -82,6 +82,8 @@ public abstract class SubcommClient {
 
     public abstract void send(SubcommMessage message) throws SubcommException;
     
+    public abstract void send(String message) throws SubcommException;
+    
     /**
      * Changes to a different frequency.
      * @param String frequency
