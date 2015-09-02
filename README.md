@@ -12,9 +12,6 @@ https://github.com/roylaurie/subcomm-web
 The project for the SubComm client applet is available at:
 https://github.com/roylaurie/subcomm-web-client-applet
 
-A live example of the latest stable release of the SubComm Web project is always available at:
-http://www.subcomm.net
-
 usage
 -----
 An example via code:
@@ -39,47 +36,12 @@ while (client.connected()) {
 
 contributors
 -------
-* Roy Laurie, Roy Laurie Software <roy.laurie@gmail.com>
-
-shameless plug
---------------
-Roy Laurie Software is an ongoing experiment in open-source and copy-free software
-and software services as a business.
-
-_Projects_
-* Arkown - A scriptable game-server management tool for quick tasks. Query and command:
-    Source Engine (HL2,CS:S,TF2,..), COD7 (BO).
-* Quid Pro Pwn: Mortal Kombat - A portable guide to Mortal Kombat. Moves, Special Moves,
-    Fatalities, Combos, Twitter Feed.
-
-http://www.roylaurie.com
-
-contributing
-------------
-If you can contribute well-written and solid code using project standards for something that a project needs
-in it's main-line:
-
-0. Fork the project on GitHub <https://github.com/roylaurie>.
-1. Review the code-base.
-2. Introduce yourself and your idea on the email-group <roylauriesoftware@googlegroups.com>.
-3. Make your changes.
-4. Announce when you're ready for review on the email-group.
-5. The Process: Review, Request, Fix, Review, Accept; repeat if necessary.
-6. Request a pull from the reviewer on GitHub. 
-7. Your code will be eventually merged into main-line and your name listed as an author.
-
-Requirements:
-* Follow the style standard that is apparent throughout the code-base.
-* New code should come with new unit-tests or unit-test fixes.
-* Read the project README fully and agree to donate your code under the SubComm (3bsd) license.
-
-Also, you are more than welcome to start your own project from existing code and do whatever
-you like with it - it's free software.
+* Roy Laurie <roy.laurie@gmail.com>
 
 license (3bsd)
 --------------
 
-Copyright © 2012 Roy Laurie Software. All Rights Reserved.
+Copyright © 2012 Roy Laurie. All Rights Reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
